@@ -5,51 +5,65 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Task2"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" MinHeight="430" MinWidth="600">
-    <Grid Margin="10"> 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="3*"/>
-            <ColumnDefinition Width="2*"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+        Title="Записная книжка"  Height="450" Width="800" MinHeight="430" MinWidth="600">
 
-        <ListBox Name="listBoxContacts"
-                 Grid.Column="0" Grid.Row="0"
-                 SelectionMode="Single"
-                 SelectionChanged="listBoxContacts_SelectionChanged"
-                 Margin="5">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel>
-                        <TextBlock Text="{Binding FullName}" FontWeight="Bold" FontSize="14"/>
-                        <TextBlock Text="{Binding Address}" FontStyle="Italic" FontSize="12"/>
-                        <TextBlock Text="{Binding Phone}" FontStyle="Italic" FontSize="12"/>
-                    </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-        
-        <StackPanel Grid.Column="1" Grid.Row="0" Margin="5">
-            <TextBlock Text="ФИО:" Margin="0,5,0,2"/>
-            <TextBox Name="textBoxFullName" Margin="0,0,0,10"/>
+    <Window.Resources>
+        <local:ContactL x:Key="contacts"/>
+    </Window.Resources>
 
-            <TextBlock Text="Адрес:" Margin="0,5,0,2"/>
-            <TextBox Name="textBoxAddress" Margin="0,0,0,10"/>
+    <DockPanel DataContext="{StaticResource contacts}">
 
-            <TextBlock Text="Телефон:" Margin="0,5,0,2"/>
-            <TextBox Name="textBoxPhone" Margin="0,0,0,10"/>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="Данные">
+                <MenuItem Header="Изменить контакт" Click="EditContact_Click"/>
+                <MenuItem Header="Удалить контакт" Click="DeleteContact_Click"/>
+            </MenuItem>
+            <MenuItem Header="Файлы">
+                <MenuItem Header="Сохранить как" Click="SaveContacts_Click"/>
+                <MenuItem Header="Открыть..." Click="LoadContacts_Click"/>
+            </MenuItem>
+        </Menu>
+
+        <StackPanel DockPanel.Dock="Top" Margin="10">
+            <StackPanel Orientation="Horizontal" Margin="0 5">
+                <TextBlock Text="Имя:" Width="70" VerticalAlignment="Center"/>
+                <TextBox Name="nameTextBox" Width="150" Margin="0 0 20 0"
+                      Text="{Binding SelectedContact.Name, UpdateSourceTrigger=PropertyChanged}"
+                      TextChanged="nameTextBoxChanged"/>
+                <TextBlock Text="Фамилия:" Width="70" VerticalAlignment="Bottom"/>
+                <TextBox Name="surnameTextBox" Width="150"
+                      Text="{Binding SelectedContact.Surname, UpdateSourceTrigger=PropertyChanged}"
+                      TextChanged="surnameTextBoxChanged"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Margin="0 5">
+                <TextBlock Text="Адрес:" Width="70" VerticalAlignment="Center"/>
+                <TextBox Name="addressTextBox" Width="150" Margin="0 0 20 0"
+                      Text="{Binding SelectedContact.Address, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBlock Text="Телефон:" Width="70" VerticalAlignment="Center"/>
+                <TextBox Name="phoneTextBox" Width="150"
+                      Text="{Binding SelectedContact.Phone, UpdateSourceTrigger=PropertyChanged}"
+                      TextChanged="phoneTextBoxChanged"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Margin="0 5">
+                <Button Name="addEditButton" Content="Добавить" Width="150" Margin="70 0 20 0" Click="AddContact_Click"/>
+            </StackPanel>
         </StackPanel>
 
-        <StackPanel Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2"
-             Orientation="Horizontal" HorizontalAlignment="Center" Margin="5">
-            <Button Name="btnAdd" Content="Добавить" Width="100" Margin="5" Click="btnAdd_Click"/>
-            <Button Name="btnEdit" Content="Изменить" Width="100" Margin="5" Click="btnEdit_Click"/>
-            <Button Name="btnDelete" Content="Удалить" Width="100" Margin="5" Click="btnDelete_Click"/>
-            <Button Name="btnSave" Content="Сохранить в файл" Width="150" Margin="5" Click="btnSave_Click"/>
-            <Button Name="btnLoad" Content="Загрузить из файла" Width="150" Margin="5" Click="btnLoad_Click"/>
-        </StackPanel>
-    </Grid>
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Margin="10">
+            <DataGrid x:Name="contactsDataGrid"
+                   ItemsSource="{Binding Contacts}"
+                   AutoGenerateColumns="False"
+                   CanUserAddRows="False"
+                   HeadersVisibility="Column">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Имя" Binding="{Binding Name}" Width="190"/>
+                    <DataGridTextColumn Header="Фамилия" Binding="{Binding Surname}" Width="190"/>
+                    <DataGridTextColumn Header="Адрес" Binding="{Binding Address}" Width="190"/>
+                    <DataGridTextColumn Header="Телефон" Binding="{Binding Phone}" Width="193"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </ScrollViewer>
+    </DockPanel>
 </Window>

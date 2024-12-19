@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,19 +10,33 @@ namespace Task2
 {
     public class Contact : INotifyPropertyChanged
     {
-        private string fullName;
+        private string name;
+        private string surname;
         private string address;
         private string phone;
 
-        public string FullName
+        public string Name
         {
-            get => fullName;
+            get => name;
             set
             {
-                if (fullName != value)
+                if (name != value)
                 {
-                    fullName = value;
-                    OnPropertyChanged("FullName");
+                    name = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public string Surname
+        {
+            get => surname;
+            set
+            {
+                if (surname != value)
+                {
+                    surname = value;
+                    OnPropertyChanged();
                 }
             }
         }
@@ -34,7 +49,7 @@ namespace Task2
                 if (address != value)
                 {
                     address = value;
-                    OnPropertyChanged("Address");
+                    OnPropertyChanged();
                 }
             }
         }
@@ -47,16 +62,16 @@ namespace Task2
                 if (phone != value)
                 {
                     phone = value;
-                    OnPropertyChanged("Phone");
+                    OnPropertyChanged();
                 }
             }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void OnPropertyChanged(string name)
+        protected void OnPropertyChanged(string propertyName = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

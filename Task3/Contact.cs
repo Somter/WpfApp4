@@ -1,62 +1,53 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 
 namespace Task3
 {
     public class Contact : INotifyPropertyChanged
     {
-        private string fullName;
-        private string address;
-        private string phone;
+        private readonly Dictionary<string, string> fields = new Dictionary<string, string>();
 
-        public string FullName
+        public string Name
         {
-            get => fullName;
-            set
-            {
-                if (fullName != value)
-                {
-                    fullName = value;
-                    OnPropertyChanged("FullName");
-                }
-            }
+            get => GetField(nameof(Name));
+            set => SetField(nameof(Name), value);
+        }
+
+        public string Surname
+        {
+            get => GetField(nameof(Surname));
+            set => SetField(nameof(Surname), value);
         }
 
         public string Address
         {
-            get => address;
-            set
-            {
-                if (address != value)
-                {
-                    address = value;
-                    OnPropertyChanged("Address");
-                }
-            }
+            get => GetField(nameof(Address));
+            set => SetField(nameof(Address), value);
         }
 
         public string Phone
         {
-            get => phone;
-            set
-            {
-                if (phone != value)
-                {
-                    phone = value;
-                    OnPropertyChanged("Phone");
-                }
-            }
+            get => GetField(nameof(Phone));
+            set => SetField(nameof(Phone), value);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string name)
+        private string GetField(string propertyName)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            return fields.TryGetValue(propertyName, out var value) ? value : string.Empty;
+        }
+
+        private void SetField(string propertyName, string value)
+        {
+            if (fields.TryGetValue(propertyName, out var currentValue) && currentValue == value)
+                return;
+
+            fields[propertyName] = value;
+            OnPropertyChanged(propertyName);
+        }
+
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
